@@ -10,6 +10,8 @@ batch_size: 12544
 
 # Dataset details
 dataset_path: nyu.r3d
+# dataset_path: CDSlab.r3d
+use_cache_dataset: false
 cache_result: true
 cache_path: detic_labeled_dataset.pt
 saved_dataset_path: detic_labeled_dataset.pt
@@ -43,7 +45,7 @@ dataparallel: false
 num_workers: 10
 
 # Debug purposes, visualize Detic results
-visualize_detic_results: false
+visualize_detic_results: true
 detic_visualization_path: "detic_debug"
 
 # Cache only runs are for building per-dataset caches, which can be used for multi-run later.
@@ -55,6 +57,10 @@ weight_decay: 0.003
 betas:
   - 0.9
   - 0.999
+  
+# Scheduler data
+step_size: 20
+gamma: 0.5
 
 save_directory: "clip_implicit_model"
 
@@ -84,100 +90,6 @@ hydra:
     partition: learnfair
 
 # Add any custom labels you want here
-custom_labels:
-  - kitchen counter
-  - kitchen cabinet
-  - stove
-  - cabinet
-  - bathroom counter
-  - refrigerator
-  - microwave
-  - oven
-  - fireplace
-  - door
-  - sink
-  - furniture
-  - dish rack
-  - dining table
-  - shelf
-  - bar
-  - dishwasher
-  - toaster oven
-  - toaster
-  - mini fridge
-  - soap dish
-  - coffee maker
-  - table
-  - bowl
-  - rack
-  - bulletin board
-  - water cooler
-  - coffee kettle
-  - lamp
-  - plate
-  - window
-  - dustpan
-  - trash bin
-  - ceiling
-  - doorframe
-  - trash can
-  - basket
-  - wall
-  - bottle
-  - broom
-  - bin
-  - paper
-  - storage container
-  - box
-  - tray
-  - whiteboard
-  - decoration
-  - board
-  - cup
-  - windowsill
-  - potted plant
-  - light
-  - machine
-  - fire extinguisher
-  - bag
-  - paper towel roll
-  - chair
-  - book
-  - fire alarm
-  - blinds
-  - crate
-  - tissue box
-  - towel
-  - paper bag
-  - column
-  - fan
-  - object
-  - range hood
-  - plant
-  - structure
-  - poster
-  - mat
-  - water bottle
-  - power outlet
-  - storage bin
-  - radiator
-  - picture
-  - water pitcher
-  - pillar
-  - light switch
-  - bucket
-  - storage organizer
-  - vent
-  - counter
-  - ceiling light
-  - case of water bottles
-  - pipe
-  - scale
-  - recycling bin
-  - clock
-  - sign
-  - folded chair
-  - power strip
 
 # Or just comment it out for SCANNET 200 labels.
-# custom_labels: null
+custom_labels: null

@@ -49,6 +49,7 @@ def train(
     clip_train_loader: DataLoader,
     labelling_model: Union[GridCLIPModel, ImplicitDataparallel],
     optim: torch.optim.Optimizer,
+    scheduler: torch.optim.lr_scheduler.StepLR, 
     epoch: int,
     classifier: ClassificationExtractor,
     device: Union[str, torch.device] = DEVICE,
@@ -159,6 +160,9 @@ def train(
         total_classification_loss += classification_loss.detach().cpu().item()
         total_loss += contrastive_loss.detach().cpu().item()
         total_samples += 1
+    
+    scheduler.step()
+    print(optim.param_groups[0]['lr'])
 
     to_log = {
         "train_avg/contrastive_loss_labels": label_loss / total_samples,
@@ -201,7 +205,7 @@ def save(
     }
     torch.save(
         state_dict,
-        f"{save_directory}/implicit_scene_label_model_latest.pt",
+        f"{save_directory}/implicit_scene_label_model_latest_{epoch}.pt",
     )
     return 0
 
@@ -239,7 +243,10 @@ def main(cfg):
     seed_everything(cfg.seed)
     # Set up single thread tokenizer.
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    real_dataset: DeticDenseLabelledDataset = get_real_dataset(cfg)
+    if cfg.use_cache_dataset:
+        real_dataset = torch.load(cfg.cache_path)
+    else:
+        real_dataset: DeticDenseLabelledDataset = get_real_dataset(cfg)
     # Setup our model with min and max coordinates.
     max_coords, _ = real_dataset._label_xyz.max(dim=0)
     min_coords, _ = real_dataset._label_xyz.min(dim=0)
@@ -299,6 +306,11 @@ def main(cfg):
         betas=tuple(cfg.betas),
         weight_decay=cfg.weight_decay,
     )
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer = optim, 
+        step_size = cfg.step_size, 
+        gamma = cfg.gamma,
+    )
 
     save_directory = cfg.save_directory
     state_dict = "{}/implicit_scene_label_model_latest.pt".format(save_directory)
@@ -338,6 +350,7 @@ def main(cfg):
             clip_train_loader,
             labelling_model,
             optim,
+            scheduler,
             epoch,
             train_classifier,
             cfg.device,
