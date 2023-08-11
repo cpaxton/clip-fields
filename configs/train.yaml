@@ -17,9 +17,9 @@ cache_path: detic_labeled_dataset.pt
 saved_dataset_path: detic_labeled_dataset.pt
 
 # Data loading and labelling specs
-sample_freq: 5
+sample_freq: 1
 detic_threshold: 0.4
-subsample_prob: 0.2
+subsample_prob: 0.01
 use_lseg: false
 use_extra_classes: false
 use_gt_classes_in_detic: true
