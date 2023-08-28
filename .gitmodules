@@ -4,3 +4,6 @@
 [submodule "LSeg"]
 	path = LSeg
 	url = https://github.com/notmahi/LSeg
+[submodule "scenic"]
+	path = scenic
+	url = https://github.com/google-research/scenic.git
