@@ -123,7 +123,7 @@ class DeticDenseLabelledDataset(Dataset):
         sentence_encoding_model_name="all-mpnet-base-v2",
         device: str = "cuda",
         batch_size: int = 1,
-        detic_threshold: float = 0.3,
+        threshold: float = 0.3,
         num_images_to_label: int = -1,
         subsample_prob: float = 0.2,
         use_lseg: bool = False,

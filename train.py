@@ -17,6 +17,7 @@ import wandb
 from dataloaders import (
     R3DSemanticDataset,
     DeticDenseLabelledDataset,
+    OWLViTLabelledDataset,
     ClassificationExtractor,
 )
 from misc import ImplicitDataparallel
@@ -220,14 +221,26 @@ def get_real_dataset(cfg):
                 view_dataset,
                 torch.arange(0, len(view_dataset), cfg.sample_freq),
             )
-        location_train_dataset = DeticDenseLabelledDataset(
+        #location_train_dataset = DeticDenseLabelledDataset(
+        #    view_dataset,
+        #    clip_model_name=cfg.web_models.clip,
+        #    sentence_encoding_model_name=cfg.web_models.sentence,
+        #    device=cfg.device,
+        #    threshold=cfg.threshold,
+        #    subsample_prob=cfg.subsample_prob,
+        #    use_lseg=cfg.use_lseg,
+        #    use_extra_classes=cfg.use_extra_classes,
+        #    use_gt_classes=cfg.use_gt_classes_in_detic,
+        #    visualize_results=cfg.visualize_detic_results,
+        #    visualization_path=cfg.detic_visualization_path,
+        #)
+        location_train_dataset = OWLViTLabelledDataset(
             view_dataset,
-            clip_model_name=cfg.web_models.clip,
+            #clip_model_name=cfg.web_models.clip,
             sentence_encoding_model_name=cfg.web_models.sentence,
             device=cfg.device,
-            detic_threshold=cfg.detic_threshold,
+            threshold=cfg.threshold,
             subsample_prob=cfg.subsample_prob,
-            use_lseg=cfg.use_lseg,
             use_extra_classes=cfg.use_extra_classes,
             use_gt_classes=cfg.use_gt_classes_in_detic,
             visualize_results=cfg.visualize_detic_results,
@@ -246,7 +259,8 @@ def main(cfg):
     if cfg.use_cache_dataset:
         real_dataset = torch.load(cfg.cache_path)
     else:
-        real_dataset: DeticDenseLabelledDataset = get_real_dataset(cfg)
+        #real_dataset: DeticDenseLabelledDataset = get_real_dataset(cfg)
+        real_dataset: OWLViTLabelledDataset = get_real_dataset(cfg)
     # Setup our model with min and max coordinates.
     max_coords, _ = real_dataset._label_xyz.max(dim=0)
     min_coords, _ = real_dataset._label_xyz.min(dim=0)

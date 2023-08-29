@@ -28,34 +28,12 @@ d2_logger.setLevel(level=logging.WARNING)
 import sys
 
 # import some common detectron2 utilities
-from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog
-from detectron2.engine import DefaultPredictor
 
-
-DETIC_PATH = os.environ.get("DETIC_PATH", Path(__file__).parent / "../Detic")
-LSEG_PATH = os.environ.get("LSEG_PATH", Path(__file__).parent / "../LSeg/")
-
-sys.path.insert(0, f"{LSEG_PATH}/")
-from encoding.models.sseg import BaseNet
-from additional_utils.models import LSeg_MultiEvalModule
-from modules.lseg_module import LSegModule
 import torchvision.transforms as transforms
 from transformers import AutoProcessor, OwlViTForObjectDetection
 import cv2
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
-
-cfg = get_cfg()
-cfg.MODEL.WEIGHTS = "https://dl.fbaipublicfiles.com/detic/Detic_LCOCOI21k_CLIP_SwinB_896b32_4x_ft4x_max-size.pth"
-cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
-cfg.MODEL.ROI_BOX_HEAD.ZEROSHOT_WEIGHT_PATH = "rand"
-cfg.MODEL.ROI_HEADS.ONE_CLASS_PER_PROPOSAL = (
-    False  # For better visualization purpose. Set to False for all classes.
-)
-cfg.MODEL.ROI_BOX_HEAD.CAT_FREQ_PATH = (
-    f"{DETIC_PATH}/datasets/metadata/lvis_v1_train_cat_info.json"
-)
-# cfg.MODEL.DEVICE='cpu' # uncomment this to use cpu-only mode.
 
 
 def get_clip_embeddings(vocabulary, prompt="a photo of "):
@@ -158,7 +136,7 @@ class OWLViTLabelledDataset(Dataset):
         sam_model_path_name="sam_vit_h_4b8939.pth",
         device: str = "cuda",
         batch_size: int = 1,
-        owl_threshold: float = 0.1,
+        threshold: float = 0.1,
         num_images_to_label: int = -1,
         subsample_prob: float = 0.2,
         use_extra_classes: bool = False,
@@ -181,7 +159,7 @@ class OWLViTLabelledDataset(Dataset):
 
         self._batch_size = batch_size
         self._device = device
-        self._owl_threshold = owl_threshold
+        self._owl_threshold = threshold
         self._subsample_prob = subsample_prob
 
         self._label_xyz = []
