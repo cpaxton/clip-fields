@@ -62,7 +62,7 @@ betas:
 step_size: 20
 gamma: 0.5
 
-save_directory: "clip_implicit_model"
+save_directory: "kitchen_owl1"
 
 web_models:
   clip: "ViT-B/32"

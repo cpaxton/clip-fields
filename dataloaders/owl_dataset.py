@@ -263,7 +263,7 @@ class OWLViTLabelledDataset(Dataset):
                     point_coords=None,
                     point_labels=None,
                     boxes=transformed_boxes,
-                    multimask_output=True
+                    multimask_output=False
                 )
                 #print(masks.shape)
                 masks = masks[:, 0, :, :]
@@ -280,7 +280,7 @@ class OWLViTLabelledDataset(Dataset):
                         tl_x, tl_y, br_x, br_y = tl_x.item(), tl_y.item(), br_x.item(), br_y.item()
                         cv2.rectangle(image_vis, (int(tl_x), int(tl_y)), (int(br_x), int(br_y)), (255, 0, 0), 2)
                         cv2.putText(
-                            image_vis, f'{text_strings[label.item()]}: {score:1.2f}', (int(tl_x), int(br_y) - 10), cv2.FONT_HERSHEY_SIMPLEX,
+                            image_vis, f'{text_strings[label.item()]}: {score:1.2f}', (int(tl_x), int(br_y) + 10), cv2.FONT_HERSHEY_SIMPLEX,
                             0.5, (255, 0, 0), 2)
                         cv2.rectangle(image_vis, (int(tl_x), int(br_y)), (int(tl_x) + 200, int(br_y) + 13), (255, 255, 255), -1)
                     image_vis = cv2.cvtColor(image_vis, cv2.COLOR_RGB2BGR)    
