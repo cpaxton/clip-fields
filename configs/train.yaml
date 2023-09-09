@@ -35,7 +35,7 @@ log2_hashmap_size: 20
 
 # Training specs
 seed: 42
-epochs: 100
+epochs: 80
 exp_decay_coeff: 0.5
 image_to_label_loss_ratio: 1.0
 label_to_image_loss_ratio: 1.0
@@ -62,10 +62,12 @@ betas:
 step_size: 20
 gamma: 0.5
 
-save_directory: "kitchen_owl1"
+save_directory: "kitchen_owl"
 
 web_models:
-  clip: "ViT-B/32"
+  segmentation: "owl"
+  #clip: "ViT-B/32"
+  clip: "google/owlvit-base-patch32"
   sentence: "all-mpnet-base-v2"
 
 hydra:

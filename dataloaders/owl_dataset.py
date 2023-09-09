@@ -279,10 +279,10 @@ class OWLViTLabelledDataset(Dataset):
                         tl_x, tl_y, br_x, br_y = box
                         tl_x, tl_y, br_x, br_y = tl_x.item(), tl_y.item(), br_x.item(), br_y.item()
                         cv2.rectangle(image_vis, (int(tl_x), int(tl_y)), (int(br_x), int(br_y)), (255, 0, 0), 2)
+                        cv2.rectangle(image_vis, (int(tl_x), int(br_y)), (int(tl_x) + 200, int(br_y) + 13), (255, 255, 255), -1)
                         cv2.putText(
                             image_vis, f'{text_strings[label.item()]}: {score:1.2f}', (int(tl_x), int(br_y) + 10), cv2.FONT_HERSHEY_SIMPLEX,
                             0.5, (255, 0, 0), 2)
-                        cv2.rectangle(image_vis, (int(tl_x), int(br_y)), (int(tl_x) + 200, int(br_y) + 13), (255, 255, 255), -1)
                     image_vis = cv2.cvtColor(image_vis, cv2.COLOR_RGB2BGR)    
                     #cv2.imwrite(str(self._visualization_path / f"{idx}.jpg"), image_vis)
                     segmentation_color_map = np.zeros(image_vis.shape, dtype=np.uint8)
