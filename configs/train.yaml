@@ -62,7 +62,7 @@ betas:
 step_size: 20
 gamma: 0.5
 
-save_directory: "kitchen_owl"
+save_directory: "kitchen_owl1"
 
 web_models:
   segmentation: "owl"

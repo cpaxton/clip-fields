@@ -206,7 +206,7 @@ def save(
     }
     torch.save(
         state_dict,
-        f"{save_directory}/implicit_scene_label_model_latest_{epoch}.pt",
+        f"{save_directory}/implicit_scene_label_model_latest.pt",
     )
     return 0
 
@@ -221,7 +221,7 @@ def get_real_dataset(cfg):
                 view_dataset,
                 torch.arange(0, len(view_dataset), cfg.sample_freq),
             )
-        if cfg.segentation != 'owl':
+        if cfg.web_models.segmentation != 'owl':
             location_train_dataset = DeticDenseLabelledDataset(
                 view_dataset,
                 clip_model_name=cfg.web_models.clip,
@@ -268,7 +268,7 @@ def main(cfg):
     min_coords, _ = real_dataset._label_xyz.min(dim=0)
     logger.debug(f"Environment bounds: max {max_coords} min {min_coords}")
     train_classifier = ClassificationExtractor(
-        clip_model_name=cfg.web_models.clip,
+        clip_model_name='ViT-B/32',
         sentence_model_name=cfg.web_models.sentence,
         class_names=real_dataset._all_classes,
         device=cfg.device,
