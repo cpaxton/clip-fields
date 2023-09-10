@@ -92,6 +92,28 @@ hydra:
     partition: learnfair
 
 # Add any custom labels you want here
+custom_labels:
+  - cube
+  - mustard
+  - microwave
+  - trash can
+  - refrigerator
+  - puppy recipe
+  - USB connector
+  - plants
+  - sink
+  - marker pen
+  - scissors
+  - paper towels
+  - water dispenser
+  - coffee machine
+  - toaster
+  - tomato soup
+  - maxwell house
+  - apple
+  - mountain dew
+  - ping pong ball
+  - lego
 
 # Or just comment it out for SCANNET 200 labels.
 custom_labels: null

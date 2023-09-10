@@ -26,9 +26,11 @@ class R3DSemanticDataset(Dataset):
             self._path = Path(path)
 
         if custom_classes:
-            self._classes = custom_classes
+            self._classes = CLASS_LABELS_200 + custom_classes
         else:
             self._classes = CLASS_LABELS_200
+
+        print(self._classes)
 
         self._reshaped_depth = []
         self._reshaped_conf = []

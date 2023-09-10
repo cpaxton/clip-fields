@@ -262,7 +262,7 @@ def main(cfg):
         real_dataset = torch.load(cfg.cache_path)
     else:
         #real_dataset: DeticDenseLabelledDataset = get_real_dataset(cfg)
-        real_dataset: OWLViTLabelledDataset = get_real_dataset(cfg)
+        real_dataset = get_real_dataset(cfg)
     # Setup our model with min and max coordinates.
     max_coords, _ = real_dataset._label_xyz.max(dim=0)
     min_coords, _ = real_dataset._label_xyz.min(dim=0)
