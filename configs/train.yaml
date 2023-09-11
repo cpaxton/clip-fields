@@ -13,8 +13,8 @@ dataset_path: nyu.r3d
 # dataset_path: CDSlab.r3d
 use_cache_dataset: false
 cache_result: true
-cache_path: detic_labeled_dataset.pt
-saved_dataset_path: detic_labeled_dataset.pt
+cache_path: detic_labeled_dataset_scannet_200_test_labels.pt
+saved_dataset_path: detic_labeled_dataset_scannet_200_test_labels.pt
 
 # Data loading and labelling specs
 sample_freq: 1
@@ -62,7 +62,7 @@ betas:
 step_size: 20
 gamma: 0.5
 
-save_directory: "kitchen_owl1"
+save_directory: "kitchen_owl_scannet_200_test_labels"
 
 web_models:
   segmentation: "owl"
@@ -94,10 +94,12 @@ hydra:
 # Add any custom labels you want here
 custom_labels:
   - cube
+  - bottle
   - mustard
   - microwave
   - trash can
   - refrigerator
+  - package
   - puppy recipe
   - USB connector
   - plants
@@ -108,12 +110,14 @@ custom_labels:
   - water dispenser
   - coffee machine
   - toaster
-  - tomato soup
-  - maxwell house
+  - tomato soup can
+  - can
+  - coffee can
   - apple
   - mountain dew
   - ping pong ball
   - lego
+  - toy brick
 
 # Or just comment it out for SCANNET 200 labels.
-custom_labels: null
+#custom_labels: null
