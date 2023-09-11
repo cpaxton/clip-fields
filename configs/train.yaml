@@ -13,8 +13,8 @@ dataset_path: nyu.r3d
 # dataset_path: CDSlab.r3d
 use_cache_dataset: false
 cache_result: true
-cache_path: detic_labeled_dataset_scannet_200_test_labels.pt
-saved_dataset_path: detic_labeled_dataset_scannet_200_test_labels.pt
+cache_path: detic_labeled_dataset_gpt_100_test_labels.pt
+saved_dataset_path: detic_labeled_dataset_gpt_100_test_labels.pt
 
 # Data loading and labelling specs
 sample_freq: 1
@@ -62,7 +62,7 @@ betas:
 step_size: 20
 gamma: 0.5
 
-save_directory: "kitchen_owl_scannet_200_test_labels"
+save_directory: "kitchen_gpt_100_test_labels"
 
 web_models:
   segmentation: "owl"
