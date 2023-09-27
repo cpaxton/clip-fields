@@ -29,7 +29,7 @@ class R3DSemanticDataset(Dataset):
             self._classes = CLASS_LABELS_200 + custom_classes
         else:
             self._classes = CLASS_LABELS_200
-
+        self._classes = list(set(self._classes))
         print(self._classes)
 
         self._reshaped_depth = []
