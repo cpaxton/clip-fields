@@ -17,7 +17,7 @@ saved_dataset_path: detic_labeled_dataset_gpt_100_test_labels.pt
 
 # Data loading and labelling specs
 sample_freq: 5
-threshold: 0.4
+threshold: 0.1
 subsample_prob: 0.01
 use_lseg: false
 use_extra_classes: false
@@ -34,7 +34,7 @@ log2_hashmap_size: 20
 
 # Training specs
 seed: 42
-epochs: 80
+epochs: 75
 exp_decay_coeff: 0.5
 image_to_label_loss_ratio: 1.0
 label_to_image_loss_ratio: 1.0
@@ -58,7 +58,7 @@ betas:
   - 0.999
   
 # Scheduler data
-step_size: 20
+step_size: 15
 gamma: 0.5
 
 save_directory: "kitchen_gpt_100_test_labels"
@@ -104,21 +104,30 @@ custom_labels:
   - scissors
   - paper towels
   - tomato soup can
-  - ca
+  - can
+  - glass
+  - beverage
+  - food
+  - fruit
+  - tripod
+  - screwdriver
+  - school bag
   - apple
   - mountain dew
   - ping pong ball
   - lego
   - cup
   - duck
-  # We do not want to miss zero point in our point cloud
-  - tape
-  - green tape
-  - green tape on the ground
-  - tape on the ground
-  - tape on the floor
-  - toy brick
+  - charger
+  - toy
+  - notebook
   - disinfecting wipes
+  - tape
+  - plastic bag
+  - chopsticks
+  - eraser
+  - umbrella
+  - whiteboard care
 
 # Or just comment it out for SCANNET 200 labels.
 #custom_labels: null

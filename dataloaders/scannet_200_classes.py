@@ -81,7 +81,7 @@ CLASS_LABELS_200 =(
     "blackboard",
     "piano",
     "suitcase",
-    "rail",
+    #"rail",
     "radiator",
     "recycling bin",
     "container",
