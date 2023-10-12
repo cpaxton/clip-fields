@@ -238,11 +238,13 @@ class OWLViTLabelledDataset(Dataset):
                 continue
             rgb = einops.rearrange(data_dict["rgb"][..., :3], "b h w c -> b c h w")
             xyz = data_dict["xyz_position"]
+            owl_queries = ['a photo of ' + class_name for class_name in self._all_classes]
             for image, coordinates in zip(rgb, xyz):
                 # Now calculate the Detic classification for this.
                 #print(image.size())
                 target_sizes = torch.Tensor([image[0].size()])
-                inputs = self._processor(text=self._all_classes, images=image, return_tensors="pt")
+                #inputs = self._processor(text=self._all_classes, images=image, return_tensors="pt")
+                inputs = self._processor(text=owl_queries, images=image, return_tensors="pt")
                 for input in inputs:
                     inputs[input] = inputs[input].to(self._device)
                 with torch.no_grad():
@@ -418,6 +420,8 @@ class OWLViTLabelledDataset(Dataset):
             OWLViTLabelledDataset.process_text(x)
             for x in view_data._id_to_name.values()
         ]
+        #prompt = ['', 'red ', 'orange ', 'yellow ', 'green ', 'cyan ', 'blue ', 'magenta ',
+        #    'purple ', 'white ', 'black ', 'grey ', 'pink ', 'brown ', 'beige ', 'teal ']
         prebuilt_class_set = (
             set(prebuilt_class_names) if self._use_gt_classes else set()
         )
@@ -428,6 +432,11 @@ class OWLViTLabelledDataset(Dataset):
         )
 
         self._all_classes = prebuilt_class_names + filtered_new_classes
+        #all_classes = []
+        #for name in self._all_classes:
+        #    for p in prompt:
+        #        all_classes.append(p + name)
+        #self._all_classes = all_classes
 
         if self._use_gt_classes:
             self._new_class_to_old_class_mapping = {

@@ -9,15 +9,15 @@ use_cache: false
 batch_size: 12544
 
 # Dataset details
-dataset_path: ../CDSLab.r3d
+dataset_path: "../Meeting Room.r3d"
 use_cache_dataset: false
 cache_result: true
-cache_path: detic_labeled_dataset_gpt_100_test_labels.pt
-saved_dataset_path: detic_labeled_dataset_gpt_100_test_labels.pt
+cache_path: meeting_room_data.pt
+saved_dataset_path: meeting_room_data.pt
 
 # Data loading and labelling specs
-sample_freq: 5
-threshold: 0.1
+sample_freq: 3
+threshold: 0.2
 subsample_prob: 0.01
 use_lseg: false
 use_extra_classes: false
@@ -34,7 +34,7 @@ log2_hashmap_size: 20
 
 # Training specs
 seed: 42
-epochs: 75
+epochs: 70
 exp_decay_coeff: 0.5
 image_to_label_loss_ratio: 1.0
 label_to_image_loss_ratio: 1.0
@@ -45,7 +45,7 @@ num_workers: 10
 
 # Debug purposes, visualize Detic results
 visualize_detic_results: true
-detic_visualization_path: "detic_debug"
+detic_visualization_path: "meeting_room_debug"
 
 # Cache only runs are for building per-dataset caches, which can be used for multi-run later.
 cache_only_run: false
@@ -58,10 +58,10 @@ betas:
   - 0.999
   
 # Scheduler data
-step_size: 15
+step_size: 14
 gamma: 0.5
 
-save_directory: "kitchen_gpt_100_test_labels"
+save_directory: "meeting_room_model_weights"
 
 web_models:
   segmentation: "owl"
@@ -97,13 +97,11 @@ custom_labels:
   - mustard
   - trash can
   - package
-  - puppy recipe
-  - USB connector
+  - water dispenser
   - plants
   - marker pen
   - scissors
   - paper towels
-  - tomato soup can
   - can
   - glass
   - beverage
@@ -119,15 +117,25 @@ custom_labels:
   - cup
   - duck
   - charger
+  - adapter
   - toy
   - notebook
   - disinfecting wipes
   - tape
   - plastic bag
   - chopsticks
-  - eraser
   - umbrella
-  - whiteboard care
+  - rag
+  - hand sanitizers
+  - alcohol disinfection
+  - banana
+  - spray
+  - baseball
+  - block
+  - softball
+  - tennis
+  - bascketball
+  - vase
 
 # Or just comment it out for SCANNET 200 labels.
 #custom_labels: null
