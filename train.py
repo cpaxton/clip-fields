@@ -19,6 +19,7 @@ from dataloaders import (
     DeticDenseLabelledDataset,
     OWLViTLabelledDataset,
     ClassificationExtractor,
+    HomeRobotDataset
 )
 from misc import ImplicitDataparallel
 from grid_hash_model import GridCLIPModel
@@ -216,6 +217,7 @@ def get_real_dataset(cfg):
         location_train_dataset = torch.load(cfg.saved_dataset_path)
     else:
         view_dataset = R3DSemanticDataset(cfg.dataset_path, cfg.custom_labels)
+        #view_dataset = HomeRobotDataset(cfg.dataset_path, cfg.custom_labels)
         if cfg.sample_freq != 1:
             view_dataset = Subset(
                 view_dataset,

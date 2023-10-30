@@ -9,7 +9,8 @@ use_cache: false
 batch_size: 12544
 
 # Dataset details
-dataset_path: "../Meeting Room.r3d"
+dataset_path: "../Kitchen.r3d"
+#dataset_path: 'output.pkl'
 use_cache_dataset: false
 cache_result: true
 cache_path: meeting_room_data.pt
@@ -17,7 +18,7 @@ saved_dataset_path: meeting_room_data.pt
 
 # Data loading and labelling specs
 sample_freq: 3
-threshold: 0.2
+threshold: 0.15
 subsample_prob: 0.01
 use_lseg: false
 use_extra_classes: false

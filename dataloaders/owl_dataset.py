@@ -36,12 +36,12 @@ import cv2
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
 
 
-def get_clip_embeddings(vocabulary, prompt="a photo of "):
-    text_encoder = build_text_encoder(pretrain=True)
-    text_encoder.eval()
-    texts = [prompt + x.replace("-", " ") for x in vocabulary]
-    emb = text_encoder(texts).detach().permute(1, 0).contiguous().cpu()
-    return emb
+#def get_clip_embeddings(vocabulary, prompt="a photo of "):
+#    text_encoder = build_text_encoder(pretrain=True)
+#    text_encoder.eval()
+#    texts = [prompt + x.replace("-", " ") for x in vocabulary]
+#    emb = text_encoder(texts).detach().permute(1, 0).contiguous().cpu()
+#    return emb
 
 
 # New visualizer class to disable jitter.
@@ -129,7 +129,8 @@ class OWLViTLabelledDataset(Dataset):
 
     def __init__(
         self,
-        view_dataset: Union[R3DSemanticDataset, Subset[R3DSemanticDataset]],
+        #view_dataset: Union[R3DSemanticDataset, Subset[R3DSemanticDataset]],
+        view_dataset,
         owl_model_name: str = "google/owlvit-base-patch32",
         sentence_encoding_model_name="all-mpnet-base-v2",
         sam_model_type = "vit_h",
