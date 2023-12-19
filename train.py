@@ -216,13 +216,13 @@ def get_real_dataset(cfg):
     if cfg.use_cache:
         location_train_dataset = torch.load(cfg.saved_dataset_path)
     else:
-        view_dataset = R3DSemanticDataset(cfg.dataset_path, cfg.custom_labels)
+        view_dataset = R3DSemanticDataset(cfg.dataset_path, cfg.custom_labels, subsample_freq=cfg.sample_freq)
         #view_dataset = HomeRobotDataset(cfg.dataset_path, cfg.custom_labels)
-        if cfg.sample_freq != 1:
-            view_dataset = Subset(
-                view_dataset,
-                torch.arange(0, len(view_dataset), cfg.sample_freq),
-            )
+        #if cfg.sample_freq != 1:
+        #    view_dataset = Subset(
+        #        view_dataset,
+        #        torch.arange(0, len(view_dataset), cfg.sample_freq),
+        #    )
         if cfg.web_models.segmentation != 'owl':
             location_train_dataset = DeticDenseLabelledDataset(
                 view_dataset,
@@ -351,7 +351,7 @@ def main(cfg):
     if torch.cuda.device_count() > 1 and cfg.dataparallel:
         labelling_model = ImplicitDataparallel(labelling_model)
         dataparallel = True
-
+    #exit()
     wandb.init(
         project=cfg.project,
         tags=[f"model/{cfg.model_type}"],

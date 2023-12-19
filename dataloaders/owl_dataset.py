@@ -232,9 +232,11 @@ class OWLViTLabelledDataset(Dataset):
         text_strings = [
             OWLViTLabelledDataset.process_text(x) for x in self._all_classes
         ]
+        #log = 0
         for idx, data_dict in tqdm.tqdm(
             enumerate(dataloader), total=len(dataset), desc="Calculating OWL features"
         ):
+            #print(log)
             if idx not in images_to_label:
                 continue
             rgb = einops.rearrange(data_dict["rgb"][..., :3], "b h w c -> b c h w")
@@ -278,6 +280,8 @@ class OWLViTLabelledDataset(Dataset):
                 
                 if self._visualize:
                     image_vis = np.array(image.permute(1, 2, 0))
+                    image = cv2.cvtColor(image_vis, cv2.COLOR_RGB2BGR)
+                    cv2.imwrite(str(self._visualization_path / f"{idx}_Clean.jpg"), image)
                     for score, box, label in zip(scores, boxes, labels):
                         tl_x, tl_y, br_x, br_y = box
                         tl_x, tl_y, br_x, br_y = tl_x.item(), tl_y.item(), br_x.item(), br_y.item()
@@ -287,14 +291,13 @@ class OWLViTLabelledDataset(Dataset):
                             image_vis, f'{text_strings[label.item()]}: {score:1.2f}', (int(tl_x), int(br_y) + 10), cv2.FONT_HERSHEY_SIMPLEX,
                             0.5, (255, 0, 0), 2)
                     image_vis = cv2.cvtColor(image_vis, cv2.COLOR_RGB2BGR)    
-                    #cv2.imwrite(str(self._visualization_path / f"{idx}.jpg"), image_vis)
+                    #cv2.imwrite(str(self._visualization_path / f"Clean_{idx}.jpg"), image_vis)
                     segmentation_color_map = np.zeros(image_vis.shape, dtype=np.uint8)
                     #print(segmentation_color_map.shape, masks.shape, image_vis.shape)
                     for mask in masks:
                         segmentation_color_map[mask.detach().cpu().numpy()] = [0, 255, 0]
                     image_vis = cv2.addWeighted(image_vis, 0.7, segmentation_color_map, 0.3, 0)
                     cv2.imwrite(str(self._visualization_path / f"{idx}.jpg"), image_vis)
-                    
                 for pred_class, pred_box, pred_score, feature, pred_mask in zip(
                     labels.cpu(),
                     boxes.cpu(),
@@ -313,6 +316,7 @@ class OWLViTLabelledDataset(Dataset):
                     self._label_xyz.append(
                         reshaped_coordinates[real_mask][resampled_indices]
                     )
+                    #log += len(reshaped_coordinates[real_mask][resampled_indices])
                     self._label_rgb.append(
                         reshaped_rgb[real_mask_rect][resampled_indices]
                     )

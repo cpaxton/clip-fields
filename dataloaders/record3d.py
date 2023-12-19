@@ -19,6 +19,7 @@ class R3DSemanticDataset(Dataset):
         self,
         path: str,
         custom_classes: Optional[List[str]] = CLASS_LABELS_200,
+        subsample_freq = 1,
     ):
         if path.endswith((".zip", ".r3d")):
             self._path = ZipFile(path)
@@ -31,7 +32,8 @@ class R3DSemanticDataset(Dataset):
             self._classes = CLASS_LABELS_200
         self._classes = list(set(self._classes))
         print(self._classes)
-
+        
+        self._subsample_freq = subsample_freq
         self._reshaped_depth = []
         self._reshaped_conf = []
         self._depth_images = []
@@ -91,7 +93,7 @@ class R3DSemanticDataset(Dataset):
 
     def _load_data(self):
         assert self.fps  # Make sure metadata is read correctly first.
-        for i in tqdm.trange(self.total_images, desc="Loading data"):
+        for i in tqdm.tqdm(range(0, self.total_images, self._subsample_freq), desc="Loading data"):
             # Read up the RGB and depth images first.
             rgb_filepath = f"rgbd/{i}.jpg"
             depth_filepath = f"rgbd/{i}.depth"
@@ -107,7 +109,8 @@ class R3DSemanticDataset(Dataset):
             self._confidences.append(confidence)
 
     def _reshape_all_depth_and_conf(self):
-        for index in tqdm.trange(len(self.poses), desc="Upscaling depth and conf"):
+        #for index in tqdm.trange(len(self.poses), desc="Upscaling depth and conf"):
+        for index in tqdm.trange(len(self._depth_images), desc="Upscaling depth and conf"): 
             depth_image = self._depth_images[index]
             # Upscale depth image.
             pil_img = Image.fromarray(depth_image)
@@ -154,7 +157,8 @@ class R3DSemanticDataset(Dataset):
         pcd.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
 
         extrinsic_matrix = np.eye(4)
-        qx, qy, qz, qw, px, py, pz = self.poses[index]
+        #qx, qy, qz, qw, px, py, pz = self.poses[index]
+        qx, qy, qz, qw, px, py, pz = self.poses[index * self._subsample_freq]
         extrinsic_matrix[:3, :3] = as_rotation_matrix(quaternion(qw, qx, qy, qz))
         extrinsic_matrix[:3, -1] = [px, py, pz]
         pcd.transform(extrinsic_matrix)
@@ -171,15 +175,16 @@ class R3DSemanticDataset(Dataset):
     def calculate_all_global_xyzs(self, only_confident=True):
         if len(self.global_xyzs):
             return self.global_xyzs, self.global_pcds
-        for i in tqdm.trange(len(self.poses), desc="Calculating global XYZs"):
+        for i in tqdm.trange(len(self._depth_images), desc="Calculating global XYZs"):
             global_xyz_pcd = self.get_global_xyz(i, only_confident=only_confident)
             global_xyz = np.asarray(global_xyz_pcd.points)
             self.global_xyzs.append(global_xyz)
-            self.global_pcds.append(global_xyz_pcd)
-        return self.global_xyzs, self.global_pcds
+            #self.global_pcds.append(global_xyz_pcd)
+        #return self.global_xyzs, self.global_pcds
 
     def __len__(self):
-        return len(self.poses)
+        #return len(self.poses)
+        return len(self._depth_images)
 
     def __getitem__(self, idx):
         result = {

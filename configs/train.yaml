@@ -9,17 +9,17 @@ use_cache: false
 batch_size: 12544
 
 # Dataset details
-dataset_path: "../Sofa.r3d"
+dataset_path: "../r3d/Yaswanth/YaswanthBedroomRedo.r3d"
 #dataset_path: 'output.pkl'
 use_cache_dataset: false
 cache_result: true
-cache_path: sofa_data.pt
-saved_dataset_path: sofa_data.pt
+cache_path: YaswanthBedroom.pt
+saved_dataset_path: YaswanthBedroom.pt
 
 # Data loading and labelling specs
-sample_freq: 2
+sample_freq: 5
 threshold: 0.15
-subsample_prob: 0.01
+subsample_prob: 0.005
 use_lseg: false
 use_extra_classes: false
 use_gt_classes_in_detic: true
@@ -46,7 +46,7 @@ num_workers: 10
 
 # Debug purposes, visualize Detic results
 visualize_detic_results: true
-detic_visualization_path: "sofa_debug"
+detic_visualization_path: "Yaswanth_Bedroom_debug"
 
 # Cache only runs are for building per-dataset caches, which can be used for multi-run later.
 cache_only_run: false
@@ -62,7 +62,7 @@ betas:
 step_size: 14
 gamma: 0.5
 
-save_directory: "sofa_model_weights"
+save_directory: "Yaswanth_Bedroom_model_weights"
 
 web_models:
   segmentation: "owl"
@@ -93,16 +93,23 @@ hydra:
 
 # Add any custom labels you want here
 custom_labels:
-  - cube
+  - muffins
+  - hat
+  - pepper
+  - salt
+  - hand wash
+  - hand sanitizer
+  - soy sauce
   - bottle
   - mustard
   - trash can
   - package
   - water dispenser
   - plants
+  - mug
   - marker pen
   - scissors
-  - paper towels
+  - paper towel
   - can
   - glass
   - beverage
@@ -112,31 +119,32 @@ custom_labels:
   - screwdriver
   - school bag
   - apple
-  - mountain dew
+  - multivitamin
+  - inhaler 
   - ping pong ball
-  - lego
+  - face wash
   - cup
-  - duck
+  - body wash
   - charger
-  - adapter
+  - fish oil
   - toy
   - notebook
   - disinfecting wipes
   - tape
   - plastic bag
   - chopsticks
-  - umbrella
   - rag
   - hand sanitizers
   - alcohol disinfection
   - banana
   - spray
   - baseball
-  - block
-  - softball
+  - shower gel
   - tennis
   - bascketball
-  - vase
+  - adapter
+  - umbrella
+  - aerosol
 
 # Or just comment it out for SCANNET 200 labels.
 #custom_labels: null
