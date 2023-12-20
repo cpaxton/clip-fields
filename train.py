@@ -19,7 +19,7 @@ from dataloaders import (
     DeticDenseLabelledDataset,
     OWLViTLabelledDataset,
     ClassificationExtractor,
-    HomeRobotDataset
+#    HomeRobotDataset
 )
 from misc import ImplicitDataparallel
 from grid_hash_model import GridCLIPModel
@@ -351,7 +351,7 @@ def main(cfg):
     if torch.cuda.device_count() > 1 and cfg.dataparallel:
         labelling_model = ImplicitDataparallel(labelling_model)
         dataparallel = True
-    #exit()
+    exit()
     wandb.init(
         project=cfg.project,
         tags=[f"model/{cfg.model_type}"],

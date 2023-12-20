@@ -1,5 +1,5 @@
 from dataloaders.record3d import R3DSemanticDataset
-from dataloaders.home_robot import HomeRobotDataset
+#from dataloaders.home_robot import HomeRobotDataset
 from dataloaders.open_classification import ClassificationExtractor
 from dataloaders.real_dataset import DeticDenseLabelledDataset
 from dataloaders.sam_dataset import SAMLabelledDataset

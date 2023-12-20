@@ -7,6 +7,7 @@ import torch
 import tqdm
 from matplotlib import pyplot as plt
 import cv2
+import wget
 
 import numpy as np
 from pathlib import Path
@@ -187,6 +188,9 @@ class OWLViTLabelledDataset(Dataset):
             os.makedirs(self._visualization_path, exist_ok=True)
         # First, setup detic with the combined classes.
         self._setup_owl_all_classes(view_data)
+        if not os.path.exists(sam_model_path_name):
+            url = 'https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth'
+            wget.download(url, out = sam_model_path_name)
         sam = sam_model_registry[sam_model_type](checkpoint=sam_model_path_name)
         mask_predictor = SamPredictor(sam)
         mask_predictor.model = mask_predictor.model.cuda()
