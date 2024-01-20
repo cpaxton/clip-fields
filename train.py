@@ -276,7 +276,7 @@ def main(cfg):
     if cfg.use_cache_dataset:
         real_dataset = torch.load(cfg.cache_path)
     else:
-        real_dataset = get_real_dataset(cfg, transform)
+        real_dataset = get_real_dataset(cfg)
     # Setup our model with min and max coordinates.
     max_coords, _ = real_dataset._label_xyz.max(dim=0)
     min_coords, _ = real_dataset._label_xyz.min(dim=0)
