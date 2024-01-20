@@ -10,11 +10,13 @@ batch_size: 12544
 
 # Dataset details
 dataset_path: "../YaswanthBedroomRedo.r3d"
+apply_transform: true
+transform_path: "../transform.npy"
 #dataset_path: 'output.pkl'
 use_cache_dataset: false
 cache_result: true
-cache_path: YaswanthBedroom.pt
-saved_dataset_path: YaswanthBedroom.pt
+cache_path: ChrisHome.pt
+saved_dataset_path: ChrisHome.pt
 
 # Data loading and labelling specs
 sample_freq: 5

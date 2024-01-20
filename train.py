@@ -213,6 +213,18 @@ def save(
 
 
 def get_real_dataset(cfg):
+    """
+    Parameters:
+        cfg: config
+    """
+
+    if cfg.apply_transform and len(cfg.transform_path) > 0:
+        print(f"Loading transform from {cfg.transform_path}")
+        transform = np.load(cfg.transform_path)
+        print(f"Loaded transform:\n{transform}")
+    else:
+        transform = None
+
     if cfg.use_cache:
         location_train_dataset = torch.load(cfg.saved_dataset_path)
     else:
@@ -249,6 +261,7 @@ def get_real_dataset(cfg):
                 use_gt_classes=cfg.use_gt_classes_in_detic,
                 visualize_results=cfg.visualize_detic_results,
                 visualization_path=cfg.detic_visualization_path,
+                transform=transform,
             )
         if cfg.cache_result:
             torch.save(location_train_dataset, cfg.cache_path)
@@ -263,8 +276,7 @@ def main(cfg):
     if cfg.use_cache_dataset:
         real_dataset = torch.load(cfg.cache_path)
     else:
-        #real_dataset: DeticDenseLabelledDataset = get_real_dataset(cfg)
-        real_dataset = get_real_dataset(cfg)
+        real_dataset = get_real_dataset(cfg, transform)
     # Setup our model with min and max coordinates.
     max_coords, _ = real_dataset._label_xyz.max(dim=0)
     min_coords, _ = real_dataset._label_xyz.min(dim=0)

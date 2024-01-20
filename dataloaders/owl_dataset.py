@@ -149,6 +149,7 @@ class OWLViTLabelledDataset(Dataset):
         visualize_results: bool = False,
         visualization_path: Optional[str] = None,
         use_scannet_colors: bool = True,
+        transform: Optional[np.ndarray] = None,
     ):
         dataset = view_dataset
         view_data = (
@@ -163,6 +164,8 @@ class OWLViTLabelledDataset(Dataset):
         self._device = device
         self._owl_threshold = threshold
         self._subsample_prob = subsample_prob
+
+        self._transform = transform
 
         self._label_xyz = []
         self._label_rgb = []
@@ -355,6 +358,10 @@ class OWLViTLabelledDataset(Dataset):
 
         for i, feature in enumerate(all_embedded_text):
             self._text_id_to_feature[i] = feature
+
+        # If a transform was provided...
+        if self._transform is not None:
+            breakpoint()
 
         # Now, we map from label to text using this model.
         self._label_xyz = torch.cat(self._label_xyz).float()
