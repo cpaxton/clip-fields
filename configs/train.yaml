@@ -9,14 +9,15 @@ use_cache: false
 batch_size: 12544
 
 # Dataset details
-dataset_path: "../YaswanthBedroomRedo.r3d"
-apply_transform: true
-transform_path: "../transform.npy"
-#dataset_path: 'output.pkl'
+# dataset_path: "../YaswanthBedroomRedo.r3d"
+dataset_path: "../chris6.r3d"
+apply_transform: false
+transform_path: "../no_transform.npy"
 use_cache_dataset: false
 cache_result: true
-cache_path: ChrisHome.pt
-saved_dataset_path: ChrisHome.pt
+cache_path: proc_chris6.pt
+saved_dataset_path: proc_chris6.pt
+pointcloud_path: proc_chris6.ply
 
 # Data loading and labelling specs
 sample_freq: 5
@@ -64,7 +65,7 @@ betas:
 step_size: 14
 gamma: 0.5
 
-save_directory: "Yaswanth_Bedroom_model_weights"
+save_directory: "home"
 
 web_models:
   segmentation: "owl"

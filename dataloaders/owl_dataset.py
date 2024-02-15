@@ -2,6 +2,7 @@ import logging
 from typing import List, Optional, Union
 import clip
 import einops
+import open3d as o3d
 import os
 import torch
 import tqdm
@@ -127,6 +128,8 @@ def post_process_object_detection(
 class OWLViTLabelledDataset(Dataset):
     LSEG_LABEL_WEIGHT = 0.1
     LSEG_IMAGE_DISTANCE = 10.0
+    _debug_transform = True
+    _quick_debug = False
 
     def __init__(
         self,
@@ -228,6 +231,64 @@ class OWLViTLabelledDataset(Dataset):
             num_objects_and_images, key=lambda x: x[0], reverse=True
         )
         return [x[1] for x in sorted_num_object_and_img[:num_images_to_label]]
+
+    def save_pointcloud(self, filename):
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(self._label_xyz.cpu().numpy())
+        pcd.colors = o3d.utility.Vector3dVector(self._label_rgb.cpu().numpy() / 255)
+
+        import trimesh
+        print(f"Saving z-up pointcloud to {filename}.")
+        T = trimesh.transformations.euler_matrix(np.pi/2, 0, 0)
+        pcd.transform(T)
+
+        # TODO: debugging code
+        triad = o3d.geometry.TriangleMesh.create_coordinate_frame(size=1.0)
+        o3d.visualization.draw_geometries([pcd, triad])
+        
+        o3d.io.write_point_cloud(filename, pcd)
+
+    def _center_xyz_on_ground_plane(self):
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(self._label_xyz.cpu().numpy())
+        pcd.colors = o3d.utility.Vector3dVector(self._label_rgb.cpu().numpy() / 255)
+
+        # Define the RANSAC parameters
+        distance_threshold = 0.01
+        ransac_n = 5
+        num_iterations = 5000
+
+        # Segment the plane using RANSAC
+        print("Find a plane so we can center on the floor.")
+        plane_model, inliers = pcd.segment_plane(distance_threshold, ransac_n, num_iterations)
+
+        # Extract the inlier points
+        inlier_cloud = pcd.select_by_index(inliers)
+
+        a, b, c, d = plane_model
+        print(f"{plane_model=}")
+
+        # Compute the distance from the origin to the plane
+        distance = abs(d) / np.sqrt(a**2 + b**2 + c**2)
+
+        # Compute the direction of the translation (normalized normal vector)
+        normal_vector = np.array([a, b, c])
+        direction = normal_vector / np.linalg.norm(normal_vector)
+
+        # Compute the translation vector
+        translation_vector = distance * direction
+        print("Translation vector:", translation_vector)
+        offset = translation_vector
+
+        # TODO: remove debugging code
+        # triad = o3d.geometry.TriangleMesh.create_coordinate_frame(size=1.0)
+        # inlier_cloud = pcd.select_by_index(inliers)
+        # o3d.visualization.draw_geometries([inlier_cloud, triad])
+        pcd.translate(offset)
+        # o3d.visualization.draw_geometries([pcd, triad])
+        # breakpoint()
+
+        self._label_xyz = torch.FloatTensor(np.asarray(pcd.points))
 
     @torch.no_grad()
     def _setup_owl_dense_labels(
@@ -344,7 +405,10 @@ class OWLViTLabelledDataset(Dataset):
                     )
                     self._distance.append(torch.zeros(total_points)[resampled_indices])
                     label_idx += 1
-                    
+
+            if self._quick_debug and idx > 30:
+                break
+
         del self._model
         
         # Now, get all the sentence encoding for all the labels.
@@ -359,13 +423,19 @@ class OWLViTLabelledDataset(Dataset):
         for i, feature in enumerate(all_embedded_text):
             self._text_id_to_feature[i] = feature
 
-        # If a transform was provided...
-        if self._transform is not None:
-            breakpoint()
-
         # Now, we map from label to text using this model.
         self._label_xyz = torch.cat(self._label_xyz).float()
         self._label_rgb = torch.cat(self._label_rgb).float()
+
+        # self._center_xyz_on_ground_plane()
+
+        if self._debug_transform:
+            pcd = o3d.geometry.PointCloud()
+            pcd.points = o3d.utility.Vector3dVector(self._label_xyz.cpu().numpy())
+            pcd.colors = o3d.utility.Vector3dVector(self._label_rgb.cpu().numpy() / 255)
+            triad = o3d.geometry.TriangleMesh.create_coordinate_frame(size=1.0)
+            o3d.visualization.draw_geometries([pcd, triad])
+
         self._label_weight = torch.cat(self._label_weight).float()
         self._image_features = torch.cat(self._image_features).float()
         self._text_ids = torch.cat(self._text_ids).long()

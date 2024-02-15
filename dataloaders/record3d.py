@@ -179,8 +179,6 @@ class R3DSemanticDataset(Dataset):
             global_xyz_pcd = self.get_global_xyz(i, only_confident=only_confident)
             global_xyz = np.asarray(global_xyz_pcd.points)
             self.global_xyzs.append(global_xyz)
-            #self.global_pcds.append(global_xyz_pcd)
-        #return self.global_xyzs, self.global_pcds
 
     def __len__(self):
         #return len(self.poses)

@@ -263,6 +263,7 @@ def get_real_dataset(cfg):
                 visualization_path=cfg.detic_visualization_path,
                 transform=transform,
             )
+            location_train_dataset.save_pointcloud(cfg.pointcloud_path)
         if cfg.cache_result:
             torch.save(location_train_dataset, cfg.cache_path)
     return location_train_dataset
